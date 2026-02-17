@@ -1,0 +1,69 @@
+services:
+  backend1:
+    build: .
+    container_name: travel_backend_1
+    env_file:
+    - .env.docker
+    environment:
+      - PORT=7010
+    ports:
+      - "7010:7010"
+    volumes:
+      - temp_uploads:/app/public/temp
+    restart: unless-stopped
+    depends_on:
+      - mongo:
+          condition: service_started
+    networks:
+      - app-network
+
+  backend2:
+    build: .
+    container_name: travel_backend_2
+    env_file:
+    - .env.docker
+    environment:
+      - PORT=7010
+    ports:
+      - "7011:7010"
+    volumes:
+      - temp_uploads:/app/public/temp
+    restart: unless-stopped
+    depends_on:
+      - mongo:
+          condition: service_started
+    networks:
+      - app-network
+
+  mongo:
+    image: mongo:6
+    container_name: travel_mongo
+    restart: unless-stopped
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+    networks:
+      - app-network
+
+  nginx:
+    image: nginx:alpine
+    container_name: travel_nginx
+    ports:
+      - "8082:80"
+    volumes:
+      - ./nginx/default.conf:/etc/nginx/nginx.conf:ro
+    depends_on:
+      - backend1
+      - backend2
+    restart: unless-stopped
+    networks:
+      - app-network
+
+volumes:
+  temp_uploads:
+  mongo_data:
+
+networks:
+  app-network:
+    driver: bridge
