@@ -25,7 +25,7 @@ app.use(mongoSanitize());
 
 app.use('/public', express.static(path.join(__dirname, 'public')));
 
-app.get("/", (req, res) => {
+app.get("/health", (req, res) => {
     res.send("home page");
 });
 
