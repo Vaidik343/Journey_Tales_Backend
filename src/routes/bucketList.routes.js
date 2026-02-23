@@ -4,26 +4,36 @@ const express = require('express');
 const { apiLimiter } = require("../middleware/rateLimiter");
 const { bucketlistValidations } = require("../validations/bucketlist.validations");
 const validate = require("../middleware/validate");
+const { useAuth } = require("../middleware/auth");
 
 const router = express.Router();
 
 router.post('/bucketlist',
-    apiLimiter, 
+    apiLimiter,
+    useAuth,
     bucketlistValidations.createBucketListValidations, 
     validate ,
     bucketListController.createBucketList);
 
 router.get('/bucketlist', 
-    apiLimiter, 
+    apiLimiter,
+    useAuth,
     bucketListController.getAllBucketList);
+
+router.get('/bucketlist/:id',
+    apiLimiter,
+    useAuth,
+    bucketListController.getBucketById);
     
 router.put('/bucketlist/:id',
-    apiLimiter, 
+    apiLimiter,
+    useAuth, 
     bucketlistValidations.updateBucketListValidations, 
     validate ,
     bucketListController.updateBucketList);
 
 router.delete('/bucketlist/:id', apiLimiter,
+    useAuth,
      bucketlistValidations.deleteBucketListValidations, 
      validate ,
       bucketListController.deleteBucketList);

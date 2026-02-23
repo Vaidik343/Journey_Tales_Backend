@@ -4,7 +4,7 @@ const { fileUpload } = require('../utils/fileUpload');
 // couldanry setup for video upload
 const createStories = async (req, res, next) => {
     const {tripId, placeName,  story,visitDate} = req.body;
-
+        console.log("story", req.body)
  
 
     try {
@@ -42,7 +42,7 @@ if (req.files && req.files.length > 0) {
 
         //create
         const stories = await Story.create({
-            tripId, placeName, images:imageUrls, story,visitDate
+            tripId, placeName, images:imageUrls,userId: req.user.id, story,visitDate
         })
         console.log("🚀 ~ createStories ~ stories:", stories)
 
@@ -56,7 +56,7 @@ if (req.files && req.files.length > 0) {
 
 const getAllStories = async (req, res, next) => {
     try {
-        const stories = await Story.find();
+        const stories = await Story.find({ userId: req.user.id });
 
         if(stories.length === 0)
         {
@@ -67,6 +67,22 @@ const getAllStories = async (req, res, next) => {
     } catch (error) {
         next(error);
         
+    }
+}
+
+const getStoryById = async (req, res, next) => {
+    const storyId = req.params.id;
+    
+    try {
+        const story = await Story.findById(storyId);
+        
+        if (!story) {
+            return res.status(404).json({message: "Story not found"});
+        }
+        
+        res.status(200).json(story);
+    } catch (error) {
+        next(error);
     }
 }
 
@@ -101,4 +117,4 @@ const deleteStories = async (req, res, next) => {
     }
 }
 
-module.exports.storyController = {createStories, getAllStories, updateStories, deleteStories}
+module.exports.storyController = {createStories, getAllStories, getStoryById, updateStories, deleteStories}

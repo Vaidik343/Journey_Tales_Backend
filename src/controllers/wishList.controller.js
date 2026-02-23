@@ -37,6 +37,22 @@ const getAllWishList = async (req, res, next) => {
 
 }
 
+const getWishlistById = async (req, res, next) => {
+    const wishlistId = req.params.id;
+    
+    try {
+        const wishlist = await WishList.findById(wishlistId);
+        
+        if (!wishlist) {
+            return res.status(404).json({message: "Wishlist not found"});
+        }
+        
+        res.status(200).json(wishlist);
+    } catch (error) {
+        next(error);
+    }
+}
+
 const updateWishlist = async (req,res,next) => {
     console.log("🚀 ~ updateWishlist ~ updateWishlist:", req.body)
     const wishlistId = req.params.id;
@@ -74,5 +90,5 @@ const deleteWishlist = async (req,res,next) => {
 }
 
 module.exports.wishlistController = {
-    createWishList, getAllWishList, updateWishlist, deleteWishlist
+    createWishList, getAllWishList, getWishlistById, updateWishlist, deleteWishlist
 }

@@ -21,7 +21,8 @@ const fileFilter = (req, file, cb) => {
     path.extname(file.originalname).toLowerCase()
   );
 
-  const mimetype = allowedTypes.text(file.mimetype);
+  const mimetype = allowedTypes.test(file.mimetype);
+
 
   if(extname && mimetype)
   {
@@ -30,6 +31,7 @@ const fileFilter = (req, file, cb) => {
     cb(new Error("Only image and video files are allowed!"))
   }
 }
+console.log("🚀 ~ fileFilter ~ fileFilter:", fileFilter)
 
 //size limit
  const upload = multer({ storage: storage , 
@@ -38,5 +40,7 @@ const fileFilter = (req, file, cb) => {
   fileSize: 20 * 1024 * 1024 , 
   files: 10
 }})
+ console.log("🚀 ~ upload:", upload)
+
 
  module.exports = {upload}

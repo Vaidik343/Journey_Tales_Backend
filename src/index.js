@@ -6,9 +6,10 @@ const connectDB = require('./config/db');
 const fs = require('fs');
 const path = require('path')
 const app = express();
-const PORT = process.env.PORT || 7010;
+const PORT = process.env.PORT || 7011;
 const helmet = require('helmet')
 const mongoSanitize = require('express-mongo-sanitize');
+const cookieParser = require('cookie-parser');
 
 app.use(
   helmet({
@@ -18,6 +19,7 @@ app.use(
 
 app.use(cors());
 app.use(express.json());
+app.use(cookieParser());
 app.use(mongoSanitize());
 
 
@@ -53,9 +55,10 @@ const startServer = async () => {
     try {
         await connectDB();
 
-        app.listen(PORT, () => {
-            console.log(`🚀 Server running on http://localhost:${PORT}`);
-        });
+      app.listen(PORT, '0.0.0.0', () => {
+  console.log(`🚀 Server running on 0.0.0.0:${PORT}`);
+});
+
     } catch (error) {
         console.error("❌ Server startup failed:", error.message);
     }

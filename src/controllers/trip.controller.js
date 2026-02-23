@@ -3,9 +3,11 @@ const { fileUpload } = require('../utils/fileUpload');
 
 
 const createTrip = async (req, res, next) => {
+    console.log("BODY:", req.body);
+console.log("FILE:", req.file);
 
-    const {userId, title,  startDate, endDate, summary} = req.body;
-
+    const { title,  startDate, endDate, summary} = req.body;
+    const userId = req.user.id;
    
     try {
 
@@ -43,7 +45,7 @@ const createTrip = async (req, res, next) => {
 const getAllTrip = async (req,res, next) => {
 
     try {
-        const trips = await Trip.find();
+        const trips = await Trip.find({ userId: req.user.id });
 
           if(trips.length === 0)
         {
@@ -55,6 +57,22 @@ const getAllTrip = async (req,res, next) => {
         next(error);
     }
 
+}
+
+const getTripById = async(req, res, next) => {
+    const TripId = req.params.id;
+    
+    try {
+        const trip = await Trip.findById(TripId);
+        
+        if (!trip) {
+            return res.status(404).json({message: "Trip not found"});
+        }
+        
+        res.status(200).json(trip);
+    } catch (error) {
+        next(error);
+    }
 }
 
 const updateTrip = async(req, res, next) => {
@@ -105,5 +123,5 @@ res.status(200).json({message:"trip deleted successfully"})
 }
 
 module.exports.tripController = {
-    createTrip, getAllTrip, updateTrip, deleteTrip
+    createTrip, getAllTrip, getTripById, updateTrip, deleteTrip
 }

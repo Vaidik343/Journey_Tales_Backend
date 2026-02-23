@@ -1,15 +1,13 @@
 const {body, param} = require('express-validator');
 
 const createStoriesValidations = [
-    param("tripId").notEmpty().withMessage("Trip Id required!")
-    .isMongoId().withMessage("Invalid Id!"),
+   
 
     body("placeName").notEmpty().withMessage("Place name required!")
-    .isLength({min:2}).withMessage("Place name must be at least 3 character"),
+    .isLength({min:3}).withMessage("Place name must be at least 3 character"),
 
-    body("story").optional().isLength({max:1000}).withMessage("story cannot exceed 1000 characters"),
+    body("story").notEmpty().withMessage("Story required!").isLength({max:1000}).withMessage("story cannot exceed 1000 characters"),
 
-    body("visitDate").optional().isISO8601().withMessage("visitDate must be a valid date"),
 ]
 
 const updateStoriesValidation = [

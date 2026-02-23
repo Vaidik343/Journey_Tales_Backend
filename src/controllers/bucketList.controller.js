@@ -37,6 +37,22 @@ const getAllBucketList = async (req, res, next) => {
 
 }
 
+const getBucketById = async (req, res, next) => {
+    const bucketId = req.params.id;
+    
+    try {
+        const bucket_list = await BucketList.findById(bucketId);
+        
+        if (!bucket_list) {
+            return res.status(404).json({message: "Bucket not found"});
+        }
+        
+        res.status(200).json(bucket_list);
+    } catch (error) {
+        next(error);
+    }
+}
+
 const updateBucketList = async (req, res, next) => {
     const bucket_list_Id = req.params.id;
        const { name,quantity, note} = req.body;
@@ -69,5 +85,5 @@ const deleteBucketList = async (req, res, next) => {
 }
 
 module.exports.bucketListController = {
-    createBucketList, getAllBucketList, updateBucketList, deleteBucketList
+    createBucketList, getAllBucketList, getBucketById, updateBucketList, deleteBucketList
 }

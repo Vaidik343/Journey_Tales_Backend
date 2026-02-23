@@ -6,6 +6,11 @@ const storySchema = new mongoose.Schema({
         ref:"Trip",
         required: true
     },
+    userId : {
+        type: mongoose.Schema.Types.ObjectId,
+        ref:"User",
+        required: true
+    },
     placeName: {
         type: String,
         required: true
